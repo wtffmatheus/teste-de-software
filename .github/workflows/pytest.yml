@@ -1,38 +1,46 @@
-name: CI Express CEP
+name: Entrega Final CEP
 
-on: [push]
+on:
+  push:
+    branches: [ main, develop ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
+    - name: Baixar codigo
+      uses: actions/checkout@v3
 
     - name: Configurar Python
       uses: actions/setup-python@v3
       with:
         python-version: '3.10'
 
-    - name: Instalar Dependências
-      run: pip install pytest jinja2
+    - name: Instalar dependencias
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest jinja2
 
     - name: Rodar Testes
-      run: python -m pytest --junitxml=resultado_testes.xml
+      run: |
+        python -m pytest --junitxml=resultado_testes.xml
 
-    - name: Gerar Termo de Aceite
+    - name: Gerar Relatorio
       if: always()
-      run: python gera_relatorio.py
+      run: |
+        python gera_relatorio.py
 
-    - name: Enviar E-mail
+    - name: Enviar E-mail de Entrega
       if: always()
-      uses: gustavo.luz@prof.uniso.br
+      uses: dawidd6/action-send-mail@v3
       with:
         server_address: smtp.gmail.com
         server_port: 465
         username: ${{ secrets.EMAIL }}
         password: ${{ secrets.SENHAMAIL }}
-        subject: "Entrega Técnica: Termo de Aceite - Express CEP"
-        to: gustavo.luz@prof.uniso.br
-        from: "Robô de Testes"
-        body: "Olá, o sistema Express CEP passou pelos testes. Segue o termo de aceite em anexo."
+        subject: "ENTREGA: Relatorio de Testes - Matheus Trindade"
+        to: "user.matheus168@gmail.com"  # <--- COLOQUE SEU EMAIL AQUI PARA TESTAR AGORA
+        from: "Automacao GitHub"
+        body: "Relatório de testes em anexo."
         attachments: termo_de_aceite.html

@@ -1,21 +1,12 @@
-name: Testes com Pytest
-
-# Gatilhos: sempre que houver push ou pull request na branch main
-on: [push, pull_request]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest   # Máquina virtual Linux limpa
-    steps:
-      - uses: actions/checkout@v3   # Faz checkout do código
-
-      - name: Configurar Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'    # Versão do Python usada nos testes
-
-      - name: Instalar dependências
-        run: pip install pytest pytest-cov
-
-      - name: Executar Pytest
-        run: pytest --cov=cadastro --cov-report=term-missing
+- name: Enviar E-mail
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.EMAIL }}
+        password: ${{ secrets.SENHAMAIL }}
+        subject: "ENTREGA OFICIAL: Relatorio de Testes - Matheus"
+        to: "matheustrindadedasilva@gmail.com" 
+        from: "GitHub Actions"
+        body: "Segue anexo o relatório de testes aprovados."
+        attachments: termo_de_aceite.html
