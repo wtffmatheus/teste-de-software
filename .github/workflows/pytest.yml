@@ -1,4 +1,4 @@
-name: Entrega Final CEP dia 20/03
+name: Entrega Oficial - Express CEP
 
 on:
   push:
@@ -22,16 +22,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest jinja2
 
-    - name: Rodar Testes
+    - name: Executar Testes Unitarios
       run: |
         python -m pytest --junitxml=resultado_testes.xml
 
-    - name: Gerar Relatorio
+    - name: Gerar Relatorio de Aceite Tecnico
       if: always()
       run: |
         python gera_relatorio.py
 
-    - name: Enviar E-mail de Entrega
+    - name: Enviar E-mail de Entrega Final
       if: always()
       uses: dawidd6/action-send-mail@v3
       with:
@@ -39,8 +39,17 @@ jobs:
         server_port: 465
         username: ${{ secrets.EMAIL }}
         password: ${{ secrets.SENHAMAIL }}
-        subject: "ENTREGA: Relatorio de Testes - Matheus Trindade"
-        to: "user.matheus168@gmail.com"  # <--- COLOQUE SEU EMAIL AQUI PARA TESTAR AGORA
-        from: "Automacao GitHub"
-        body: "Relatório de testes em anexo."
+        subject: "RELATÓRIO DE TESTES: Validação Express CEP - Matheus Trindade"
+        to: "gustavo.luz@prof.uniso.br"
+        from: "Automação EMAIL, DIA 20/03"
+        body: |
+          Prezado,
+
+          Segue em anexo o Relatório de Aceite Técnico (RAT) referente aos testes automatizados das faixas de CEP da aplicação Express CEP.
+
+          Status: Todos os casos de teste foram validados com sucesso via GitHub Actions.
+
+          Atenciosamente,
+          Matheus Trindade da Silva
+          RA: 00121946
         attachments: termo_de_aceite.html
