@@ -1,0 +1,38 @@
+name: CI Express CEP
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Configurar Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+
+    - name: Instalar Dependências
+      run: pip install pytest jinja2
+
+    - name: Rodar Testes
+      run: python -m pytest --junitxml=resultado_testes.xml
+
+    - name: Gerar Termo de Aceite
+      if: always()
+      run: python gera_relatorio.py
+
+    - name: Enviar E-mail
+      if: always()
+      uses: gustavo.luz@prof.uniso.br
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.EMAIL }}
+        password: ${{ secrets.SENHAMAIL }}
+        subject: "Entrega Técnica: Termo de Aceite - Express CEP"
+        to: gustavo.luz@prof.uniso.br
+        from: "Robô de Testes"
+        body: "Olá, o sistema Express CEP passou pelos testes. Segue o termo de aceite em anexo."
+        attachments: termo_de_aceite.html
